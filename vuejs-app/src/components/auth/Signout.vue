@@ -1,14 +1,16 @@
-<template>
-  <div class="alert alert-success" role="alert">
-    {{ userStore.name }}
-    <br>
-    {{ userStore.email }}
-    <br>
-    You are logged in successfully. This is your dashboard.
-    <router-link :to="{ name: 'auth.signout' }"><i class="fas fa-sign-out-alt text-danger"></i></router-link>
-  </div>
-</template>
+<template></template>
 <script setup>
+import { apiSignOut } from "@/functions/api/auth";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+const router = useRouter();
 const userStore = useUserStore();
+
+onMounted(async () => {
+  const token = userStore.getSanctumToken();
+  apiSignOut(token); // no need to await since we will remove the token regardless of the response
+  userStore.reset();
+  router.replace({ name: "auth.signin" });
+});
 </script>
